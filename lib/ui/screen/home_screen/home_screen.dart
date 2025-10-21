@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_developer_assessment/consts.dart';
+import 'package:flutter_developer_assessment/ui/screen/details_screen/details_screen.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 import 'bloc/home_screen_bloc.dart';
@@ -54,42 +55,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     final article = state.articles[index];
                     return Card(
                       child: ListTile(
-                        leading: Image.network(
-                          article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
-                          height: 250,
-                          width: 100,
-                          fit: BoxFit.cover,
+                        leading: Hero(
+                          tag: article.url ?? Object(),
+                          child: Image.network(
+                            article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
+                            height: 250,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         title: Text(article.title ?? ''),
                         subtitle: Text(article.source?.name ?? 'Unknown Source'),
                         onTap: () {
-                          context.read<HomeScreenBloc>().add(OnTapArticleEvent(article.url ?? ''));
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => DetailsScreen(article: article),
+                          ));
                         },
                       ),
                     );
                   },
               ),
-              // child: ListView.builder(
-              //     itemCount: state.articles.length,
-              //     itemBuilder: (context, index) {
-              //       final article = state.articles[index];
-              //       return Card(
-              //         child: ListTile(
-              //           leading: Image.network(
-              //             article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
-              //             height: 250,
-              //             width: 100,
-              //             fit: BoxFit.cover,
-              //           ),
-              //           title: Text(article.title ?? ''),
-              //           subtitle: Text(article.source?.name ?? 'Unknown Source'),
-              //           onTap: () {
-              //             context.read<HomeScreenBloc>().add(OnTapArticleEvent(article.url ?? ''));
-              //           },
-              //         ),
-              //       );
-              //     }
-              // ),
             );
           }
           return const SizedBox.shrink();
