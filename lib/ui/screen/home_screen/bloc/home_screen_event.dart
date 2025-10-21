@@ -19,15 +19,6 @@ class LoadNextPageEvent extends HomeScreenEvent {
   List<Object?> get props => [];
 }
 
-class OnTapArticleEvent extends HomeScreenEvent {
-  final String articleUrl;
-
-  const OnTapArticleEvent(this.articleUrl);
-
-  @override
-  List<Object?> get props => [articleUrl];
-}
-
 class OnRefreshArticlesEvent extends HomeScreenEvent {
   const OnRefreshArticlesEvent();
 

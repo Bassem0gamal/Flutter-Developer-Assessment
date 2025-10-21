@@ -1,7 +1,6 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_developer_assessment/domain/usecase/fetch_articles_usecase.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_developer_assessment/domain/model/article.dart';
 
 import 'home_screen_event.dart';
@@ -13,7 +12,6 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
   HomeScreenBloc(this.fetchArticlesUseCase) : super(HomeScreenInitial()) {
     on<FetchArticlesEvent>(_fetchArticlesEvent);
-    on<OnTapArticleEvent>(_onTapArticleEvent);
     on<OnRefreshArticlesEvent>(_onRefreshArticlesEvent);
   }
 
@@ -44,15 +42,6 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
     } catch (e) {
       emit(HomeScreenError(e.toString()));
-    }
-  }
-
-  Future<void> _onTapArticleEvent(OnTapArticleEvent event, Emitter<HomeScreenState> emit) async {
-    final Uri articleUrl = Uri.parse(event.articleUrl);
-    if (await launchUrl(articleUrl)) {
-      print('Url lunched successfully: ${event.articleUrl}');
-    } else {
-      print('Could not launch url: ${event.articleUrl}');
     }
   }
 
