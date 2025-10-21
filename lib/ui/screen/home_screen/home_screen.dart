@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_developer_assessment/consts.dart';
+import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 import 'bloc/home_screen_bloc.dart';
 import 'bloc/home_screen_event.dart';
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
         builder: (context, state) {
-          if (state is HomeScreenInitial || state is HomeScreenLoading) {
+          if (state is HomeScreenInitial) {
             return const Center(child: CircularProgressIndicator());
 
           } else if (state is HomeScreenError) {
@@ -42,8 +43,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 context.read<HomeScreenBloc>().add(const OnRefreshArticlesEvent());
                 return Future.value();
               },
-              child: ListView.builder(
+              child: InfiniteList(
+                isLoading: state.isLoadingNextPage,
+                centerLoading: true,
+                loadingBuilder: (_) => Center(child: CircularProgressIndicator()),
+                hasReachedMax: state.isLastPage,
                   itemCount: state.articles.length,
+                  onFetchData: () => context.read<HomeScreenBloc>().add(const FetchArticlesEvent()),
                   itemBuilder: (context, index) {
                     final article = state.articles[index];
                     return Card(
@@ -61,8 +67,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     );
-                  }
+                  },
               ),
+              // child: ListView.builder(
+              //     itemCount: state.articles.length,
+              //     itemBuilder: (context, index) {
+              //       final article = state.articles[index];
+              //       return Card(
+              //         child: ListTile(
+              //           leading: Image.network(
+              //             article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
+              //             height: 250,
+              //             width: 100,
+              //             fit: BoxFit.cover,
+              //           ),
+              //           title: Text(article.title ?? ''),
+              //           subtitle: Text(article.source?.name ?? 'Unknown Source'),
+              //           onTap: () {
+              //             context.read<HomeScreenBloc>().add(OnTapArticleEvent(article.url ?? ''));
+              //           },
+              //         ),
+              //       );
+              //     }
+              // ),
             );
           }
           return const SizedBox.shrink();
