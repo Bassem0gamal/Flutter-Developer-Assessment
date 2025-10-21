@@ -9,8 +9,16 @@ class ArticleRepository {
 
   ArticleRepository(this._remoteDatasource, this._transformer);
 
-  Future<PageResult<Article>> getArticles(int pageNum, int pageSize) async {
-    final response = await _remoteDatasource.fetchTopArticles(pageNum, pageSize);
+  Future<PageResult<Article>> getArticles({
+    required int pageNum,
+    required int pageSize,
+    String? category,
+  }) async {
+    final response = await _remoteDatasource.fetchTopArticles(
+        pageNum: pageNum,
+        pageSize: pageSize,
+        category: category,
+    );
 
     return PageResult(
         items: response.articles.map((dto) => _transformer.transform(dto)).toList(),

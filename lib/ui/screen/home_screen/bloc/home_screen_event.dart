@@ -1,5 +1,6 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter_developer_assessment/ui/screen/home_screen/bloc/home_screen_state.dart';
 
 abstract class HomeScreenEvent extends Equatable {
   const HomeScreenEvent();
@@ -24,4 +25,13 @@ class OnRefreshArticlesEvent extends HomeScreenEvent {
 
   @override
   List<Object> get props => [];
+}
+
+class OnSelectFilterEvent extends HomeScreenEvent {
+  final CategoryFilter selectedFilter;
+
+  const OnSelectFilterEvent(this.selectedFilter);
+
+  @override
+  List<Object> get props => [selectedFilter];
 }

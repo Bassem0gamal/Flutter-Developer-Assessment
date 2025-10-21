@@ -10,39 +10,52 @@ sealed class HomeScreenState extends Equatable {
 
 class HomeScreenInitial extends HomeScreenState {}
 
-class HomeScreenLoaded extends HomeScreenState {
+class HomeScreenLoadedState extends HomeScreenState {
   final List<Article> articles;
   final int pageNumber;
   final bool isLastPage;
   final bool isNextPageError;
   final bool isLoadingNextPage;
+  final List<CategoryFilter> filters;
+  final CategoryFilter selectedFilter;
 
-  const HomeScreenLoaded({
+  const HomeScreenLoadedState({
     required this.articles,
     required this.pageNumber,
     required this.isLastPage,
     this.isNextPageError = false,
     this.isLoadingNextPage = false,
+    this.filters = CategoryFilter.values,
+    this.selectedFilter = CategoryFilter.general,
   });
 
-  HomeScreenLoaded copyWith ({
+  HomeScreenLoadedState copyWith({
     List<Article>? articles,
     int? pageNumber,
     bool? isLastPage,
     bool? isNextPageError,
     bool? isLoadingNextPage,
+    CategoryFilter? selectedFilter,
   }) {
-    return HomeScreenLoaded(
+    return HomeScreenLoadedState(
       articles: articles ?? this.articles,
       pageNumber: pageNumber ?? this.pageNumber,
       isLastPage: isLastPage ?? this.isLastPage,
       isNextPageError: isNextPageError ?? this.isNextPageError,
       isLoadingNextPage: isLoadingNextPage ?? this.isLoadingNextPage,
+      selectedFilter: selectedFilter ?? this.selectedFilter,
     );
   }
 
   @override
-  List<Object> get props => [articles, isLastPage];
+  List<Object> get props => [
+    articles,
+    pageNumber,
+    isLastPage,
+    isNextPageError,
+    isLoadingNextPage,
+    selectedFilter,
+  ];
 }
 
 class HomeScreenError extends HomeScreenState {
@@ -54,3 +67,12 @@ class HomeScreenError extends HomeScreenState {
   List<Object> get props => [message];
 }
 
+enum CategoryFilter {
+  general,
+  business,
+  entertainment,
+  health,
+  science,
+  sports,
+  technology,
+}
