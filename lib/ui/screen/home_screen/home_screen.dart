@@ -38,42 +38,68 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (state is HomeScreenError) {
             return Center(child: Text('Error: ${state.message}'));
 
-          } else if (state is HomeScreenLoaded) {
+          } else if (state is HomeScreenLoadedState) {
             return RefreshIndicator(
               onRefresh: () {
                 context.read<HomeScreenBloc>().add(const OnRefreshArticlesEvent());
                 return Future.value();
               },
-              child: InfiniteList(
-                isLoading: state.isLoadingNextPage,
-                centerLoading: true,
-                loadingBuilder: (_) => Center(child: CircularProgressIndicator()),
-                hasReachedMax: state.isLastPage,
-                  itemCount: state.articles.length,
-                  onFetchData: () => context.read<HomeScreenBloc>().add(const FetchArticlesEvent()),
-                  itemBuilder: (context, index) {
-                    final article = state.articles[index];
-                    return Card(
-                      child: ListTile(
-                        leading: Hero(
-                          tag: article.url ?? Object(),
-                          child: Image.network(
-                            article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
-                            height: 250,
-                            width: 100,
-                            fit: BoxFit.cover,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.filters.length,
+                      itemBuilder: (context, index) {
+                        final filter = state.filters[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FilterChip(
+                            label: Text(filter.name),
+                            selected: state.selectedFilter == filter,
+                            onSelected: (selected) {
+                              context.read<HomeScreenBloc>().add(OnSelectFilterEvent(filter));
+                            },
                           ),
-                        ),
-                        title: Text(article.title ?? ''),
-                        subtitle: Text(article.source?.name ?? 'Unknown Source'),
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => DetailsScreen(article: article),
-                          ));
+                        );
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: InfiniteList(
+                      isLoading: state.isLoadingNextPage,
+                      centerLoading: true,
+                      loadingBuilder: (_) => Center(child: CircularProgressIndicator()),
+                      hasReachedMax: state.isLastPage,
+                        itemCount: state.articles.length,
+                        onFetchData: () => context.read<HomeScreenBloc>().add(const FetchArticlesEvent()),
+                        itemBuilder: (context, index) {
+                          final article = state.articles[index];
+                          return Card(
+                            child: ListTile(
+                              leading: Hero(
+                                tag: article.url ?? Object(),
+                                child: Image.network(
+                                  article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
+                                  height: 250,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              title: Text(article.title ?? ''),
+                              subtitle: Text(article.source?.name ?? 'Unknown Source'),
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => DetailsScreen(article: article),
+                                ));
+                              },
+                            ),
+                          );
                         },
-                      ),
-                    );
-                  },
+                    ),
+                  ),
+                ],
               ),
             );
           }
