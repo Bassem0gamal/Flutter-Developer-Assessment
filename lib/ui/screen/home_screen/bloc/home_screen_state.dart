@@ -26,7 +26,7 @@ class HomeScreenLoadedState extends HomeScreenState {
     this.isNextPageError = false,
     this.isLoadingNextPage = false,
     this.filters = CategoryFilter.values,
-    this.selectedFilter = CategoryFilter.all,
+    this.selectedFilter = CategoryFilter.general,
   });
 
   HomeScreenLoadedState copyWith({
@@ -68,10 +68,9 @@ class HomeScreenError extends HomeScreenState {
 }
 
 enum CategoryFilter {
-  all,
+  general,
   business,
   entertainment,
-  general,
   health,
   science,
   sports,

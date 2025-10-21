@@ -7,7 +7,15 @@ class FetchArticlesUseCase {
 
   FetchArticlesUseCase(this.repository);
 
-  Future<PageResult<Article>> call(int pageNum, int pageSize) async {
-    return await repository.getArticles(pageNum, pageSize);
+  Future<PageResult<Article>> call({
+    required int pageNum,
+    required int pageSize,
+    String? category,
+  }) async {
+    return await repository.getArticles(
+      pageNum: pageNum,
+      pageSize: pageSize,
+      category: category,
+    );
   }
 }

@@ -20,22 +20,31 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     try {
       int pageNum = 0;
       int pageSize = 10;
+
       List<Article> currentArticles = [];
+      CategoryFilter filter = CategoryFilter.general;
 
       if (state is HomeScreenLoadedState) {
         final currentState = state as HomeScreenLoadedState;
+
         pageNum = currentState.pageNumber + 1;
         currentArticles = currentState.articles;
+        filter = currentState.selectedFilter;
 
         emit(currentState.copyWith(isLoadingNextPage: true));
       }
 
-      final result = await fetchArticlesUseCase.call(pageNum, pageSize);
+      final result = await fetchArticlesUseCase.call(
+          pageNum: pageNum ,
+          pageSize: pageSize,
+          category: filter.name,
+      );
 
       final newState = HomeScreenLoadedState(
           articles: currentArticles + result.items,
           isLastPage: result.isLastPage(pageSize),
           pageNumber: result.pageNum,
+          selectedFilter: filter,
       );
 
       emit(newState);
@@ -54,7 +63,13 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     if (state is HomeScreenLoadedState) {
       final currentState = state as HomeScreenLoadedState;
 
-      emit(currentState.copyWith(selectedFilter: event.selectedFilter));
+      emit(currentState.copyWith(
+          selectedFilter: event.selectedFilter,
+          articles: [],
+          pageNumber: 0,
+          isLastPage: false,
+      ));
+      add(const FetchArticlesEvent());
     }
   }
 }
