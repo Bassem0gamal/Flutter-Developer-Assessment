@@ -1,31 +1,46 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_developer_assessment/domain/usecase/fetch_articles_usecase.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_developer_assessment/data/api/configs_api.dart';
-import 'package:flutter_developer_assessment/ui/screen/home_screen/model/article.dart';
+import 'package:flutter_developer_assessment/domain/model/article.dart';
 
 import 'home_screen_event.dart';
 import 'home_screen_state.dart';
 
 class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
-  final ConfigService configService;
-  int currentPage = 1;
-  List<Article> allArticles = [];
+  final FetchArticlesUseCase fetchArticlesUseCase;
 
-  HomeScreenBloc(this.configService) : super(const HomeScreenInitial()) {
+  HomeScreenBloc(this.fetchArticlesUseCase) : super(HomeScreenInitial()) {
     on<FetchArticlesEvent>(_fetchArticlesEvent);
     on<OnTapArticleEvent>(_onTapArticleEvent);
     on<OnRefreshArticlesEvent>(_onRefreshArticlesEvent);
   }
 
   Future<void> _fetchArticlesEvent(FetchArticlesEvent event, Emitter<HomeScreenState> emit) async {
-      emit(const HomeScreenLoading());
     try {
-      final articlesJson = await configService.fetchTopArticlas();
-      final articles = articlesJson.map<Article>((json) => Article.fromJson(json)).toList();
+      int pageNum = 0;
+      int pageSize = 10;
+      List<Article> currentArticles = [];
 
-      emit(HomeScreenLoaded(articles));
+      if (state is HomeScreenLoaded) {
+        final currentState = state as HomeScreenLoaded;
+        pageNum = currentState.pageNumber + 1;
+        currentArticles = currentState.articles;
+
+        emit(currentState.copyWith(isLoadingNextPage: true));
+      }
+
+      await Future.delayed(const Duration(seconds: 3));
+      final result = await fetchArticlesUseCase.call(pageNum, pageSize);
+
+      final newState = HomeScreenLoaded(
+          articles: currentArticles + result.items,
+          isLastPage: result.isLastPage(pageSize),
+          pageNumber: result.pageNum,
+      );
+
+      emit(newState);
 
     } catch (e) {
       emit(HomeScreenError(e.toString()));
@@ -42,7 +57,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   }
 
   Future<void> _onRefreshArticlesEvent(OnRefreshArticlesEvent event, Emitter<HomeScreenState> emit) async {
-    currentPage = 1;
-    await _fetchArticlesEvent(FetchArticlesEvent(), emit);
+    emit(HomeScreenInitial());
+    add(const FetchArticlesEvent());
   }
 }

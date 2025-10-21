@@ -1,26 +1,25 @@
-class Article {
-   Source? source;
-   String? author;
-   String? title;
-   String? description;
-   String? url;
-   String? urlToImage;
-   String? publishedAt;
-   String? content;
+class ArticleDto {
+  SourceDto? source;
+  String? author;
+  String? title;
+  String? description;
+  String? url;
+  String? urlToImage;
+  String? publishedAt;
+  String? content;
 
-  Article(
-    this.source,
-    this.description,
-    this.url,
-    this.urlToImage,
-    this.publishedAt, {
-    this.title,
-    this.content,
-    this.author,
-  });
-
-  Article.fromJson(Map<String, dynamic> json) {
-    source = json['source'] != null ? Source.fromJson(json['source']) : null;
+  ArticleDto(
+      this.source,
+      this.author,
+      this.title,
+      this.description,
+      this.url,
+      this.urlToImage,
+      this.publishedAt,
+      this.content,
+      );
+  ArticleDto.fromJson(Map<String, dynamic> json) {
+    source = json['source'] != null ? SourceDto.fromJson(json['source']) : null;
     author = json['author'];
     title = json['title'];
     description = json['description'];
@@ -46,13 +45,13 @@ class Article {
   }
 }
 
-class Source {
+class SourceDto {
   String? id;
   String? name;
 
-  Source({this.id, this.name});
+  SourceDto({this.id, this.name});
 
-  Source.fromJson(Map<String, dynamic> json) {
+  SourceDto.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
   }
