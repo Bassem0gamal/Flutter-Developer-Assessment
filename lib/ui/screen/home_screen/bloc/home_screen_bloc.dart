@@ -2,6 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_developer_assessment/domain/usecase/fetch_articles_usecase.dart';
 import 'package:flutter_developer_assessment/domain/model/article.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'home_screen_event.dart';
 import 'home_screen_state.dart';
@@ -14,7 +15,14 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     on<FetchArticlesEvent>(_fetchArticlesEvent);
     on<OnRefreshArticlesEvent>(_onRefreshArticlesEvent);
     on<OnSelectFilterEvent>(_onSelectFilterEvent);
-    on<SearchArticlesEvent>(_searchArticlesEvent);
+    on<SearchArticlesEvent>(
+      _searchArticlesEvent,
+      transformer: debounceTransformer(Duration(milliseconds: 500)),
+    );
+  }
+
+  EventTransformer<E> debounceTransformer<E>(Duration duration) {
+    return (events, mapper) => events.debounceTime(duration).flatMap(mapper);
   }
 
   Future<void> _fetchArticlesEvent(FetchArticlesEvent event, Emitter<HomeScreenState> emit) async {
