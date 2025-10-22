@@ -35,3 +35,12 @@ class OnSelectFilterEvent extends HomeScreenEvent {
   @override
   List<Object> get props => [selectedFilter];
 }
+
+class SearchArticlesEvent extends HomeScreenEvent {
+  final String query;
+
+  const SearchArticlesEvent(this.query);
+
+  @override
+  List<Object> get props => [query];
+}

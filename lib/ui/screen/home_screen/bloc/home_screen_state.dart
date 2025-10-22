@@ -16,6 +16,8 @@ class HomeScreenLoadedState extends HomeScreenState {
   final bool isLastPage;
   final bool isNextPageError;
   final bool isLoadingNextPage;
+  final bool isSearching;
+  final String searchQuery;
   final List<CategoryFilter> filters;
   final CategoryFilter selectedFilter;
 
@@ -25,6 +27,8 @@ class HomeScreenLoadedState extends HomeScreenState {
     required this.isLastPage,
     this.isNextPageError = false,
     this.isLoadingNextPage = false,
+    this.isSearching = false,
+    this.searchQuery = '',
     this.filters = CategoryFilter.values,
     this.selectedFilter = CategoryFilter.general,
   });
@@ -35,6 +39,8 @@ class HomeScreenLoadedState extends HomeScreenState {
     bool? isLastPage,
     bool? isNextPageError,
     bool? isLoadingNextPage,
+    bool? isSearching,
+    String? searchQuery,
     CategoryFilter? selectedFilter,
   }) {
     return HomeScreenLoadedState(
@@ -43,6 +49,8 @@ class HomeScreenLoadedState extends HomeScreenState {
       isLastPage: isLastPage ?? this.isLastPage,
       isNextPageError: isNextPageError ?? this.isNextPageError,
       isLoadingNextPage: isLoadingNextPage ?? this.isLoadingNextPage,
+      isSearching: isSearching ?? this.isSearching,
+      searchQuery: searchQuery ?? this.searchQuery,
       selectedFilter: selectedFilter ?? this.selectedFilter,
     );
   }
@@ -54,6 +62,8 @@ class HomeScreenLoadedState extends HomeScreenState {
     isLastPage,
     isNextPageError,
     isLoadingNextPage,
+    isSearching,
+    searchQuery,
     selectedFilter,
   ];
 }

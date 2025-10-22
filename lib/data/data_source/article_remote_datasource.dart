@@ -12,6 +12,7 @@ class ArticleRemoteDatasource {
     required int pageNum,
     required int pageSize,
     String? category,
+    String? query,
   }) async {
 
     final response = await _dio.get(
@@ -21,6 +22,7 @@ class ArticleRemoteDatasource {
         'page': pageNum,
         'pageSize': pageSize,
         'category': category,
+        'q': query,
       },
     );
 
