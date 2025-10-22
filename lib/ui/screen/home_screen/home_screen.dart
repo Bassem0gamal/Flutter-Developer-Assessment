@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_developer_assessment/consts.dart';
@@ -95,8 +96,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: ListTile(
                               leading: Hero(
                                 tag: article.url ?? Object(),
-                                child: Image.network(
-                                  article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
+                                child: CachedNetworkImage(
+                                  imageUrl: article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
                                   height: 250,
                                   width: 100,
                                   fit: BoxFit.cover,

@@ -23,12 +23,18 @@ dependencies:
   share_plus: ^12.0.1
   intl: ^0.20.2
   rxdart: ^0.28.0
+  objectbox:
+  objectbox_flutter_libs:
+  internet_connection_checker_plus: ^2.9.0
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  build_runner:
+  objectbox_generator:
 
 flutter:
 

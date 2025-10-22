@@ -13,11 +13,15 @@ class FetchArticlesUseCase {
     String? category,
     String? query,
   }) async {
-    return await repository.getArticles(
+
+    final response = await repository.getArticles(
       pageNum: pageNum,
       pageSize: pageSize,
       category: category,
       query: query,
     );
+
+    repository.saveArticles(response.items);
+    return response;
   }
 }
