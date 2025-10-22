@@ -1,4 +1,5 @@
 class Article {
+  int? id;
   Source? source;
   String? author;
   String? title;
@@ -9,6 +10,7 @@ class Article {
   String? content;
 
   Article({
+    this.id,
     this.source,
     this.author,
     this.title,

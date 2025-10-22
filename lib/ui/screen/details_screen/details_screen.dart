@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_developer_assessment/domain/model/article.dart';
@@ -49,8 +50,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
               children: [
                 Hero(
                   tag: state.url,
-                  child: Image.network(
-                    state.urlToImage,
+                  child: CachedNetworkImage(
+                    imageUrl: state.urlToImage,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
                 Padding(

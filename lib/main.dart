@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_developer_assessment/data/data_source/article_local_datasource.dart';
 import 'package:flutter_developer_assessment/data/repository/articles_repository.dart';
 import 'package:flutter_developer_assessment/data/transformer/article_transformer.dart';
 import 'package:flutter_developer_assessment/domain/usecase/fetch_articles_usecase.dart';
@@ -7,11 +8,14 @@ import 'package:flutter_developer_assessment/ui/screen/details_screen/bloc/detai
 import 'package:flutter_developer_assessment/ui/screen/home_screen/bloc/home_screen_bloc.dart';
 import 'package:flutter_developer_assessment/ui/screen/home_screen/home_screen.dart';
 import 'package:get_it/get_it.dart';
+import 'domain/usecase/fetch_saved_articles_usecase.dart';
+import 'local_storage/objectbox_store.dart';
 
-import 'data/api/article_remote_datasource.dart';
+import 'data/data_source/article_remote_datasource.dart';
 
-void main() {
-  _setupDependencies();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _setupDependencies();
 
   runApp(const ArticleApp());
 }
@@ -37,13 +41,16 @@ class ArticleApp extends StatelessWidget {
   }
 }
 
-void _setupDependencies() {
+Future<void> _setupDependencies() async {
   final getIt = GetIt.instance;
+  final objectBoxStore = await ObjectBoxStore.create();
 
   getIt.registerFactory<ArticleRemoteDatasource>(() => ArticleRemoteDatasource());
+  getIt.registerFactory<ArticleLocalDataSource>(() => ArticleLocalDataSource(objectBoxStore));
   getIt.registerFactory<ArticleTransformer>(() => ArticleTransformer());
-  getIt.registerFactory<ArticleRepository>(() => ArticleRepository(getIt(), getIt()));
+  getIt.registerFactory<ArticleRepository>(() => ArticleRepository(getIt(), getIt(), getIt()));
   getIt.registerFactory<FetchArticlesUseCase>(() => FetchArticlesUseCase(getIt()));
-  getIt.registerFactory<HomeScreenBloc>(() => HomeScreenBloc(getIt()));
+  getIt.registerFactory<FetchSavedArticlesUseCase>(() => FetchSavedArticlesUseCase(getIt()));
+  getIt.registerFactory<HomeScreenBloc>(() => HomeScreenBloc(getIt(), getIt()));
   getIt.registerFactory<DetailsScreenBloc>(() => DetailsScreenBloc());
 }
