@@ -1,5 +1,6 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_developer_assessment/domain/model/app_error.dart';
 import 'package:flutter_developer_assessment/domain/model/category_filter.dart';
 import 'package:flutter_developer_assessment/domain/usecase/fetch_articles_usecase.dart';
 import 'package:flutter_developer_assessment/domain/model/article.dart';
@@ -18,7 +19,8 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   HomeScreenBloc(
       this._fetchArticlesUseCase,
       this._fetchSavedArticlesUseCase,
-      ) : super(HomeScreenInitial()) {
+      )
+    : super(HomeScreenInitial()) {
     on<FetchArticlesEvent>(_fetchArticlesEvent);
     on<OnRefreshArticlesEvent>(_onRefreshArticlesEvent);
     on<OnSelectFilterEvent>(_onSelectFilterEvent);
@@ -49,7 +51,6 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       int pageNum = 0;
       int pageSize = 10;
 
-
       List<Article> currentArticles = [];
       CategoryFilter filter = CategoryFilter.general;
       String? query;
@@ -66,7 +67,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       }
 
       final result = await _fetchArticlesUseCase.call(
-        pageNum: pageNum ,
+        pageNum: pageNum,
         pageSize: pageSize,
         category: filter.name,
         query: query,
@@ -80,26 +81,45 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       );
 
       emit(newState);
-
     } catch (e) {
-      emit(HomeScreenError(e.toString()));
+
+      if (state is HomeScreenLoadedState) {
+        final currentState = state as HomeScreenLoadedState;
+        AppErrorType errorType = AppErrorType.unknown;
+
+        if (e is AppError) {
+          errorType = e.errorType;
+        }
+
+        emit(
+          currentState.copyWith(
+            isLoadingNextPage: false,
+            isNextPageError: true,
+            errorType: errorType,
+          ),
+        );
+      } else {
+
+        emit(HomeScreenError(e.toString()));
+      }
     }
   }
-  Future<void> _fetchArticlesFromCache(FetchArticlesEvent event, Emitter<HomeScreenState> emit) async {
 
-   final result = await _fetchSavedArticlesUseCase.call();
+  Future<void> _fetchArticlesFromCache(FetchArticlesEvent event, Emitter<HomeScreenState> emit) async {
+    final result = await _fetchSavedArticlesUseCase.call();
 
     final newState = HomeScreenLoadedState(
       articles: result,
       isLastPage: true,
       pageNumber: 0,
       selectedFilter: CategoryFilter.general,
+      errorType: AppErrorType.noInternet,
     );
 
     emit(newState);
   }
 
-    Future<void> _onRefreshArticlesEvent(OnRefreshArticlesEvent event, Emitter<HomeScreenState> emit) async {
+  Future<void> _onRefreshArticlesEvent(OnRefreshArticlesEvent event, Emitter<HomeScreenState> emit) async {
     emit(HomeScreenInitial());
     add(const FetchArticlesEvent());
   }
@@ -113,7 +133,8 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
           articles: [],
           pageNumber: 0,
           isLastPage: false,
-      ));
+        ),
+      );
       add(const FetchArticlesEvent());
     }
   }
@@ -124,13 +145,15 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     if (state is HomeScreenLoadedState) {
       final currentState = state as HomeScreenLoadedState;
 
-      emit(currentState.copyWith(
-        isSearching: query.isNotEmpty,
-        searchQuery: query,
-        articles: [],
-        pageNumber: 0,
-        isLastPage: false,
-      ));
+      emit(
+        currentState.copyWith(
+          isSearching: query.isNotEmpty,
+          searchQuery: query,
+          articles: [],
+          pageNumber: 0,
+          isLastPage: false,
+        ),
+      );
       add(const FetchArticlesEvent());
     }
   }

@@ -32,9 +32,26 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: BlocConsumer<HomeScreenBloc, HomeScreenState>(
           listener: (context, state) {
-            if (state is HomeScreenError) {
+            String? message;
+            if (state is HomeScreenLoadedState) {
+              message = state.errorType?.message;
+
+            } else if (state is HomeScreenError) {
+              message = state.message;
+            }
+
+            if (message != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Error: ${state.message}')),
+                SnackBar(
+                    content: Text(message),
+                    duration: Duration(minutes: 10),
+                  action: SnackBarAction(
+                      label: 'Retry',
+                      onPressed: () {
+                        context.read<HomeScreenBloc>().add(const OnRefreshArticlesEvent());
+                      },
+                  ),
+                ),  
               );
             }
           },

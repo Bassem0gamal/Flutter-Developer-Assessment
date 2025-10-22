@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_developer_assessment/domain/model/app_error.dart';
 import 'package:flutter_developer_assessment/domain/model/article.dart';
 import 'package:flutter_developer_assessment/domain/model/category_filter.dart';
 
@@ -21,6 +22,7 @@ class HomeScreenLoadedState extends HomeScreenState {
   final String searchQuery;
   final List<CategoryFilter> filters;
   final CategoryFilter selectedFilter;
+  final AppErrorType? errorType;
 
   const HomeScreenLoadedState({
     required this.articles,
@@ -32,6 +34,7 @@ class HomeScreenLoadedState extends HomeScreenState {
     this.searchQuery = '',
     this.filters = CategoryFilter.values,
     this.selectedFilter = CategoryFilter.general,
+    this.errorType,
   });
 
   HomeScreenLoadedState copyWith({
@@ -43,6 +46,7 @@ class HomeScreenLoadedState extends HomeScreenState {
     bool? isSearching,
     String? searchQuery,
     CategoryFilter? selectedFilter,
+    AppErrorType? errorType,
   }) {
     return HomeScreenLoadedState(
       articles: articles ?? this.articles,
@@ -53,6 +57,7 @@ class HomeScreenLoadedState extends HomeScreenState {
       isSearching: isSearching ?? this.isSearching,
       searchQuery: searchQuery ?? this.searchQuery,
       selectedFilter: selectedFilter ?? this.selectedFilter,
+      errorType: errorType ?? this.errorType,
     );
   }
 
@@ -66,6 +71,7 @@ class HomeScreenLoadedState extends HomeScreenState {
     isSearching,
     searchQuery,
     selectedFilter,
+    errorType ?? 0,
   ];
 }
 
@@ -76,4 +82,16 @@ class HomeScreenError extends HomeScreenState {
 
   @override
   List<Object> get props => [message];
+}
+
+extension AppErrorTypeExtension on AppErrorType {
+  String get message => switch (this) {
+
+    AppErrorType.noInternet => 'No Internet Connection. Please check your connection and try again.',
+    AppErrorType.rateLimitExceeded => 'Rate limit exceeded. Please wait and try again later.',
+    AppErrorType.timeOut => 'Request timed out. Please try again.',
+    AppErrorType.serverError => 'Server error occurred. Please try again later.',
+    AppErrorType.badRequest => 'Bad request. Please try again.',
+    AppErrorType.unknown => 'An unknown error occurred. Please try again.',
+  };
 }
