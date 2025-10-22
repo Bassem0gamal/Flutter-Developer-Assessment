@@ -122,11 +122,11 @@ lib/
 
 ### 📱 APK Download
 <!-- Add your APK download link here -->
-[Download APK](https://your-apk-download-link.com)
+[Download APK](https://drive.google.com/file/d/11hre4PUGenjwcVaDvrFlzPxOLYkvY0cr/view?usp=drive_link)
 
 ### 🎥 Video Demo
 <!-- Add your video demo link here -->
-[Watch Demo Video](https://your-video-demo-link.com)
+[Watch Demo Video](https://drive.google.com/file/d/1NbEYJFgSP4dzGqY-oisL0M9cPzNq8TNt/view?usp=drive_link)
 
 ### 📸 Screenshots
 
