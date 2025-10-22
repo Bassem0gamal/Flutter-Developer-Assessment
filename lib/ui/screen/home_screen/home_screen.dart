@@ -26,10 +26,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
-          title: const Text('Top Articles'),
-        ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+
+      appBar: AppBar(
+          title: Text(
+              'Top Articles',
+              style: Theme.of(context).textTheme.headlineSmall,
+          ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+
+      ),
         body: BlocConsumer<HomeScreenBloc, HomeScreenState>(
           listener: (context, state) {
             String? message;
@@ -51,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<HomeScreenBloc>().add(const OnRefreshArticlesEvent());
                       },
                   ),
-                ),  
+                ),
               );
             }
           },
@@ -104,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
+
                     Expanded(
                       child: InfiniteList(
                         isLoading: state.isLoadingNextPage,
