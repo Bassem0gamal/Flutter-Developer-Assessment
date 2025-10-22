@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_developer_assessment/data/data_source/article_local_datasource.dart';
@@ -36,7 +37,11 @@ class ArticleApp extends StatelessWidget {
         ),
       ],
 
-      child: MaterialApp(home: const HomeScreen()),
+      child: MaterialApp(
+        theme: ThemeData(
+          primaryColor: Colors.blue,
+        ),
+          home: const HomeScreen()),
     );
   }
 }
@@ -45,7 +50,8 @@ Future<void> _setupDependencies() async {
   final getIt = GetIt.instance;
   final objectBoxStore = await ObjectBoxStore.create();
 
-  getIt.registerFactory<ArticleRemoteDatasource>(() => ArticleRemoteDatasource());
+  getIt.registerLazySingleton<Dio>(() => Dio());
+  getIt.registerFactory<ArticleRemoteDatasource>(() => ArticleRemoteDatasource(getIt()));
   getIt.registerFactory<ArticleLocalDataSource>(() => ArticleLocalDataSource(objectBoxStore));
   getIt.registerFactory<ArticleTransformer>(() => ArticleTransformer());
   getIt.registerFactory<ArticleRepository>(() => ArticleRepository(getIt(), getIt(), getIt()));

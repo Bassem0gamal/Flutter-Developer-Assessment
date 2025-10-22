@@ -3,10 +3,12 @@ import 'package:flutter_developer_assessment/consts.dart';
 import 'package:flutter_developer_assessment/data/dto/articles_response_dto.dart';
 
 class ArticleRemoteDatasource {
-  final Dio _dio = Dio();
+  final Dio _dio;
 
-  final String _baseUrl = 'https://newsapi.org/v2';
-  final String _endpoint = '/top-headlines';
+  static final String _baseUrl = 'https://newsapi.org/v2';
+  static final String _endpoint = '/top-headlines';
+
+  ArticleRemoteDatasource(this._dio);
 
   Future<ArticlesResponseDto> fetchTopArticles({
     required int pageNum,
