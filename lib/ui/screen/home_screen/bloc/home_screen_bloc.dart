@@ -14,6 +14,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     on<FetchArticlesEvent>(_fetchArticlesEvent);
     on<OnRefreshArticlesEvent>(_onRefreshArticlesEvent);
     on<OnSelectFilterEvent>(_onSelectFilterEvent);
+    on<SearchArticlesEvent>(_searchArticlesEvent);
   }
 
   Future<void> _fetchArticlesEvent(FetchArticlesEvent event, Emitter<HomeScreenState> emit) async {
@@ -23,6 +24,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
       List<Article> currentArticles = [];
       CategoryFilter filter = CategoryFilter.general;
+      String? query;
 
       if (state is HomeScreenLoadedState) {
         final currentState = state as HomeScreenLoadedState;
@@ -30,6 +32,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
         pageNum = currentState.pageNumber + 1;
         currentArticles = currentState.articles;
         filter = currentState.selectedFilter;
+        query = currentState.isSearching ? currentState.searchQuery : null;
 
         emit(currentState.copyWith(isLoadingNextPage: true));
       }
@@ -38,6 +41,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
           pageNum: pageNum ,
           pageSize: pageSize,
           category: filter.name,
+          query: query,
       );
 
       final newState = HomeScreenLoadedState(
@@ -68,6 +72,23 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
           articles: [],
           pageNumber: 0,
           isLastPage: false,
+      ));
+      add(const FetchArticlesEvent());
+    }
+  }
+
+  Future<void> _searchArticlesEvent(SearchArticlesEvent event, Emitter<HomeScreenState> emit) async {
+    final query = event.query.trim();
+
+    if (state is HomeScreenLoadedState) {
+      final currentState = state as HomeScreenLoadedState;
+
+      emit(currentState.copyWith(
+        isSearching: query.isNotEmpty,
+        searchQuery: query,
+        articles: [],
+        pageNumber: 0,
+        isLastPage: false,
       ));
       add(const FetchArticlesEvent());
     }

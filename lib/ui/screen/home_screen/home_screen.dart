@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: const Text('Top Headlines'),
+        title: const Text('Top Articles'),
       ),
       body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
         builder: (context, state) {
@@ -63,6 +63,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                           ),
                         );
+                      },
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.all(12),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Search Articles',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      onChanged: (query) {
+                        context.read<HomeScreenBloc>().add(SearchArticlesEvent(query));
                       },
                     ),
                   ),

@@ -13,11 +13,13 @@ class ArticleRepository {
     required int pageNum,
     required int pageSize,
     String? category,
+    String? query,
   }) async {
     final response = await _remoteDatasource.fetchTopArticles(
         pageNum: pageNum,
         pageSize: pageSize,
         category: category,
+        query: query,
     );
 
     return PageResult(

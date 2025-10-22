@@ -11,11 +11,13 @@ class FetchArticlesUseCase {
     required int pageNum,
     required int pageSize,
     String? category,
+    String? query,
   }) async {
     return await repository.getArticles(
       pageNum: pageNum,
       pageSize: pageSize,
       category: category,
+      query: query,
     );
   }
 }
