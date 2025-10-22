@@ -1,8 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_developer_assessment/consts.dart';
-import 'package:flutter_developer_assessment/ui/screen/details_screen/details_screen.dart';
 import 'package:flutter_developer_assessment/ui/screen/home_screen/article_card.dart';
 import 'package:flutter_developer_assessment/ui/screen/home_screen/category_filter_chip.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
