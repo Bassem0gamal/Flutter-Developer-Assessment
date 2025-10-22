@@ -117,7 +117,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         state.description,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           height: 1.5,
-                          color: colorScheme.onSurface.withOpacity(0.9),
+                          color: colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 32),
