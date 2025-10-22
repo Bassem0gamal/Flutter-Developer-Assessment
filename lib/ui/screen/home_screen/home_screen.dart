@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_developer_assessment/consts.dart';
 import 'package:flutter_developer_assessment/ui/screen/details_screen/details_screen.dart';
+import 'package:flutter_developer_assessment/ui/screen/home_screen/article_card.dart';
+import 'package:flutter_developer_assessment/ui/screen/home_screen/category_filter_chip.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 import 'bloc/home_screen_bloc.dart';
@@ -56,13 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         final filter = state.filters[index];
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: FilterChip(
-                            label: Text(filter.name),
-                            selected: state.selectedFilter == filter,
-                            onSelected: (selected) {
-                              context.read<HomeScreenBloc>().add(OnSelectFilterEvent(filter));
-                            },
+                          child: CategoryFilterChip(
+                              filter: filter,
+                              isSelected: state.selectedFilter == filter,
+                              onSelected: () => context.read<HomeScreenBloc>().add(OnSelectFilterEvent(filter)),
                           ),
+
                         );
                       },
                     ),
@@ -92,28 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onFetchData: () => context.read<HomeScreenBloc>().add(const FetchArticlesEvent()),
                         itemBuilder: (context, index) {
                           final article = state.articles[index];
-                          return Card(
-                            child: ListTile(
-                              leading: Hero(
-                                tag: article.url ?? Object(),
-                                child: CachedNetworkImage(
-                                  imageUrl: article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error),
-                                  height: 250,
-                                  width: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              title: Text(article.title ?? ''),
-                              subtitle: Text(article.source?.name ?? 'Unknown Source'),
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => DetailsScreen(article: article),
-                                ));
-                              },
-                            ),
-                          );
+                          return ArticleCard(article: article);
                         },
                     ),
                   ),
