@@ -131,10 +131,10 @@ lib/
 ### 📸 Screenshots
 
 | Feature | Screenshot | Description |
-|---------|------------|-------------|
-| Home Screen | ![Home Screen](screenshots/home.png) | Main news list with categories and search |
-| Article Details | ![Article Details](screenshots/details.png) | Full article view with share options |
-| Search Results | ![Search](screenshots/search.png) | Real-time search functionality |
-| Category Filter | ![Categories](screenshots/categories.png) | Category-based news filtering |
-| Offline Mode | ![Offline](screenshots/offline.png) | Cached articles when offline |
-| Error States | ![Error](screenshots/error.png) | Network error handling with retry |
+|----------|-------------|--------------|
+| Home Screen | <img src="screenshots/home.png" width="250"/> | Main news list with categories and search |
+| Article Details | <img src="screenshots/details.png" width="250"/> | Full article view with share options |
+| Search Results | <img src="screenshots/search.png" width="250"/> | Real-time search functionality |
+| Category Filter | <img src="screenshots/categories.png" width="250"/> | Category-based news filtering |
+| Offline Mode | <img src="screenshots/offline.png" width="250"/> | Cached articles when offline |
+| Error States | <img src="screenshots/error.png" width="250"/> | Network error handling with retry |
