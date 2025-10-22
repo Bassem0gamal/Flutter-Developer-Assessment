@@ -26,81 +26,105 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: const Text('Top Articles'),
-      ),
-      body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
-        builder: (context, state) {
-          if (state is HomeScreenInitial) {
-            return const Center(child: CircularProgressIndicator());
+        appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
+          title: const Text('Top Articles'),
+        ),
+        body: BlocConsumer<HomeScreenBloc, HomeScreenState>(
+          listener: (context, state) {
+            String? message;
+            if (state is HomeScreenLoadedState) {
+              message = state.errorType?.message;
 
-          } else if (state is HomeScreenError) {
-            return Center(child: Text('Error: ${state.message}'));
+            } else if (state is HomeScreenError) {
+              message = state.message;
+            }
 
-          } else if (state is HomeScreenLoadedState) {
-            return RefreshIndicator(
-              onRefresh: () {
-                context.read<HomeScreenBloc>().add(const OnRefreshArticlesEvent());
-                return Future.value();
-              },
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: state.filters.length,
-                      itemBuilder: (context, index) {
-                        final filter = state.filters[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CategoryFilterChip(
-                              filter: filter,
-                              isSelected: state.selectedFilter == filter,
-                              onSelected: () => context.read<HomeScreenBloc>().add(OnSelectFilterEvent(filter)),
-                          ),
-
-                        );
+            if (message != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(message),
+                    duration: Duration(minutes: 10),
+                  action: SnackBarAction(
+                      label: 'Retry',
+                      onPressed: () {
+                        context.read<HomeScreenBloc>().add(const OnRefreshArticlesEvent());
                       },
-                    ),
                   ),
+                ),  
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is HomeScreenInitial) {
+              return const Center(child: CircularProgressIndicator());
 
-                  Padding(
-                    padding: EdgeInsets.all(12),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Search Articles',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                      onChanged: (query) {
-                        context.read<HomeScreenBloc>().add(SearchArticlesEvent(query));
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: InfiniteList(
-                      isLoading: state.isLoadingNextPage,
-                      centerLoading: true,
-                      loadingBuilder: (_) => Center(child: CircularProgressIndicator()),
-                      hasReachedMax: state.isLastPage,
-                        itemCount: state.articles.length,
-                        onFetchData: () => context.read<HomeScreenBloc>().add(const FetchArticlesEvent()),
+            } else if (state is HomeScreenError) {
+              return Center(child: Text('Error: ${state.message}'));
+
+            } else if (state is HomeScreenLoadedState) {
+              return RefreshIndicator(
+                onRefresh: () {
+                  context.read<HomeScreenBloc>().add(const OnRefreshArticlesEvent());
+                  return Future.value();
+                },
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.filters.length,
                         itemBuilder: (context, index) {
-                          final article = state.articles[index];
-                          return ArticleCard(article: article);
+                          final filter = state.filters[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CategoryFilterChip(
+                                filter: filter,
+                                isSelected: state.selectedFilter == filter,
+                                onSelected: () => context.read<HomeScreenBloc>().add(OnSelectFilterEvent(filter)),
+                            ),
+
+                          );
                         },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
-    );
+
+                    Padding(
+                      padding: EdgeInsets.all(12),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Search Articles',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        onChanged: (query) {
+                          context.read<HomeScreenBloc>().add(SearchArticlesEvent(query));
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: InfiniteList(
+                        isLoading: state.isLoadingNextPage,
+                        centerLoading: true,
+                        loadingBuilder: (_) => Center(child: CircularProgressIndicator()),
+                        hasReachedMax: state.isLastPage,
+                          itemCount: state.articles.length,
+                          onFetchData: () => context.read<HomeScreenBloc>().add(const FetchArticlesEvent()),
+                          itemBuilder: (context, index) {
+                            final article = state.articles[index];
+                            return ArticleCard(article: article);
+                          },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      );
   }
 }

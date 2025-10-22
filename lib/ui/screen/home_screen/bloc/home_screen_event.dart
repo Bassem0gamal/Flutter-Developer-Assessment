@@ -1,6 +1,6 @@
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_developer_assessment/ui/screen/home_screen/bloc/home_screen_state.dart';
+import 'package:flutter_developer_assessment/domain/model/category_filter.dart';
 
 abstract class HomeScreenEvent extends Equatable {
   const HomeScreenEvent();
