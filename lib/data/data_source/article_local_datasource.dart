@@ -1,6 +1,6 @@
 import 'package:objectbox/objectbox.dart';
-import '../../local_storage/article_entity.dart';
-import '../../local_storage/objectbox_store.dart';
+import '../entity/article_entity.dart';
+import '../entity/objectbox_store.dart';
 
 class ArticleLocalDataSource {
   final Box<ArticleEntity> _box;

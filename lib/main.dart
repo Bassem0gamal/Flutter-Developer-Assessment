@@ -10,7 +10,7 @@ import 'package:flutter_developer_assessment/ui/screen/home_screen/bloc/home_scr
 import 'package:flutter_developer_assessment/ui/screen/home_screen/home_screen.dart';
 import 'package:get_it/get_it.dart';
 import 'domain/usecase/fetch_saved_articles_usecase.dart';
-import 'local_storage/objectbox_store.dart';
+import 'data/entity/objectbox_store.dart';
 
 import 'data/data_source/article_remote_datasource.dart';
 

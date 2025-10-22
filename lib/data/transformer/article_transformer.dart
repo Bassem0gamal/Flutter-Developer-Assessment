@@ -1,7 +1,7 @@
 
 import 'package:flutter_developer_assessment/data/dto/article_dto.dart';
 import 'package:flutter_developer_assessment/domain/model/article.dart';
-import 'package:flutter_developer_assessment/local_storage/article_entity.dart';
+import 'package:flutter_developer_assessment/data/entity/article_entity.dart';
 
 class ArticleTransformer {
   Article fromDto(ArticleDto dto) {
