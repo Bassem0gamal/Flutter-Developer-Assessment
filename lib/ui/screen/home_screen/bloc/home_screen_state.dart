@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_developer_assessment/domain/model/article.dart';
+import 'package:flutter_developer_assessment/domain/model/category_filter.dart';
 
 sealed class HomeScreenState extends Equatable {
   const HomeScreenState();
@@ -75,14 +76,4 @@ class HomeScreenError extends HomeScreenState {
 
   @override
   List<Object> get props => [message];
-}
-
-enum CategoryFilter {
-  general,
-  business,
-  entertainment,
-  health,
-  science,
-  sports,
-  technology,
 }

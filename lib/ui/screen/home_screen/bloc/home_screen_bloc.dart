@@ -1,5 +1,6 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_developer_assessment/domain/model/category_filter.dart';
 import 'package:flutter_developer_assessment/domain/usecase/fetch_articles_usecase.dart';
 import 'package:flutter_developer_assessment/domain/model/article.dart';
 import 'package:flutter_developer_assessment/domain/usecase/fetch_saved_articles_usecase.dart';
