@@ -13,26 +13,80 @@ class ArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Card(
-      child: ListTile(
-        leading: Hero(
-          tag: article.url ?? Object(),
-          child: CachedNetworkImage(
-            imageUrl: article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-            height: 250,
-            width: 100,
-            fit: BoxFit.cover,
-          ),
-        ),
-        title: Text(article.title ?? ''),
-        subtitle: Text(article.source?.name ?? 'Unknown Source'),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      clipBehavior: Clip.antiAlias, // ensures image corners are rounded
+      child: InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) => DetailsScreen(article: article),
-          ));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => DetailsScreen(article: article),
+            ),
+          );
         },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Hero(
+              tag: article.url ?? Object(),
+              child: CachedNetworkImage(
+                imageUrl: article.urlToImage ?? PLACEHOLDER_IMAGE_URL,
+                placeholder: (context, url) => Container(
+                  width: 110,
+                  height: 110,
+                  color: Colors.grey.shade200,
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: 110,
+                  height: 110,
+                  color: Colors.grey.shade300,
+                  child: const Icon(Icons.broken_image, color: Colors.grey),
+                ),
+                width: 110,
+                height: 110,
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Text(
+                      article.source?.name ?? 'Unknown Source',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Colors.indigo.shade600,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+
+                    Text(
+                      article.title ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
